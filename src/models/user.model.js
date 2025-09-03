@@ -1,33 +1,49 @@
 import { sequelize } from "../config/database.js";
-import { DataTypes } from "sequelize";
-import StudentModel from "./student.model.js";
+import { DataTypes, ENUM } from "sequelize";
+import ProfileModel from "./profile.model.js";
 
 const UserModel = sequelize.define("user", {
-    name: {
+    username: {
         type: DataTypes.STRING(100), 
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
 
     email: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
 
     password: {
-        type: DataTypes.STRING(100), 
+        type: DataTypes.STRING(255), 
+        allowNull:false
+    },
+
+    role: {
+        type: ENUM('user','admin'),
+        defaultValue: 'user', 
         allowNull:false
     }
-},{
-    timestamps: false,
 })
 
-UserModel.belongsTo(StudentModel, {
-    foreignKey: "student_id", 
-    as: "student"
+UserModel.belongsTo(ProfileModel, {
+    foreignKey: "profile_id", 
+    as: "profile",
+    onDelete: "CASCADE",
  });
  
-StudentModel.hasMany(UserModel, {
-    foreignKey: "student_id"
+ProfileModel.hasOne(UserModel, {
+    foreignKey: "profile_id",
+    as: "user"
 });
+
+ProfileModel.addHook("afterDestroy", async (profile) => {
+  const user = await UserModel.findOne({
+    where: { person_id: profile.dataValues.id },
+  })
+});
+
+  await user.destroy();
 
 export default UserModel
