@@ -1,4 +1,5 @@
 import ProfileModel from "../models/profile.model.js";
+import UserModel from "../models/user.model.js";
 
 //POST /api/profile: crear un nuevo perfiles
 export const createProfile = async (req, res) => {
@@ -15,17 +16,17 @@ export const createProfile = async (req, res) => {
 export const listAllProfile = async (req, res) => {
     try {
         const listedProfiles = await ProfileModel.findAll(
-            //{
-            // attributes: {
-            // exclude: ["student_id"],
-            // },
-            // include: [
-            // {
-            //     model: StudentModel,
-            //     as: "student",
-            // },
-            // ],
-        //}
+            {
+            include: [
+                {
+                    model: UserModel,
+                    as: "user",
+                    attributes: {
+                        exclude: ["password"],
+                    },
+                },
+            ],
+        }
     );
         res.json(listedProfiles)
 

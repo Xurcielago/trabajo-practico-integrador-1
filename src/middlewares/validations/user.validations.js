@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 import UserModel from "../../models/user.model.js";
+import { Op } from "sequelize";
 
 export const createUserValidation = [
   
@@ -73,7 +74,7 @@ export const updateUserValidation = [
       .withMessage("Campo username debe ser entre 2 y 20 caracteres")
     .custom(async (value) => {
       const foundUser = await UserModel.findOne({
-        where: { username: value },
+        where: { username: value, id: { [Op.ne]: req.params.id } },
       });
       if (foundUser) {
         throw new Error("Este nombre de usuario ya esta registrado");
@@ -88,7 +89,7 @@ export const updateUserValidation = [
       .withMessage("Campo email debe usar el formato apropiado nombre@email.com")
     .custom(async (value) => {
       const foundUser = await UserModel.findOne({
-        where: { email: value },
+        where: { email: value, id: { [Op.ne]: req.params.id }  },
       });
       if (foundUser) {
         throw new Error("Este email ya esta registrado");

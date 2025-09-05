@@ -46,7 +46,7 @@ export const updateTagValidation = [
       .withMessage("Campo name no puede contener espacios")
     .custom(async (value) => {
       const foundTag = await TagModel.findOne({
-        where: { name: value },
+        where: { name: value, id: { [Op.ne]: req.params.id }  },
       });
       if (foundTag) {
         throw new Error("Este nombre de tag ya esta registrado");
