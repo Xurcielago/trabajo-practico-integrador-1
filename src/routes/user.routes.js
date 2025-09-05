@@ -9,9 +9,9 @@ import {
 
 import { validator } from "../middlewares/validator.js";
 import { 
-    createUserValidation, 
-    deleteUserValidation, 
+    createUserValidation,
     getUserByIDValidation,
+    deleteUserValidation, 
     updateUserValidation
 } from "../middlewares/validations/user.validations.js";
 
