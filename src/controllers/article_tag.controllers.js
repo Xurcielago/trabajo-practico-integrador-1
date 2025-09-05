@@ -1,137 +1,76 @@
-import StudentAttendanceModel from "../models/studentAttendance.model.js";
-import AttendanceModel from "../models/attendance.model.js";
-import StudentModel from "../models/student.model.js";
+import ArticleTagModel from "../models/article_tag.model.js";
 
-//POST/api/studentAttendances
-//Crear un nuevo registro de la tabla StundentAttendance
-export const createStudentAttendance = async (req, res) => {
+//POST /api/articleTags: crear un tipo de asistencia
+export const createArticleTag = async (req, res) => {
     try {
-        let {student_id, attendance_id, attendance_date} = req.body;
-        
-        //Validaciones para student_id
-        const studentExiste = await StudentModel.findByPk(student_id)
-        if (!studentExiste) {
-            return res.status(404).json({ message: "Error: El estudiante al que se intenta asignar no existe" })
-        }
+        let {article_id, tag_id} = req.body;
 
-        //Validaciones para attendance_id
-        const attendanceExiste = await AttendanceModel.findByPk(attendance_id)
-        if (!attendanceExiste) {
-            return res.status(404).json({ message: "Error: El tipo de asistencia que se intenta asignar no existe" })
-        }
-        
-        //Validaciones para attendance_date
-        const date = new Date(attendance_date);
-        if (isNaN(date.getTime())) {
-            return res.status(400).json({
-            message: "La fecha ingresada no es válida, el formato aceptado es AAAA/MM/DD"
-            });
-        }
-
-        const today = new Date();
-        if (date > today) {
-            return res.status(400).json({
-            message: "La fecha no puede ser en el futuro"
-            });
-        }
-
-        const studentAttendanceCreated = await StudentAttendanceModel.create(req.body)
-        res.status(201).json(studentAttendanceCreated)
-
+        const attendanceCreated = await ArticleTagModel.create(req.body)
+        res.status(201).json(attendanceCreated)
     } catch (err) {
-        res.status(500).json({message: "Error del lado interno del servidor", error: err.message})
+        res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//GET/api/studentAttendances
-//Ver todos los registro de la tabla StundentAttendance
-export const listAllStudentAttendance = async (req, res) => {
+//GET /api/articleTags: listar todos los tipos de asistencia
+export const listAllArticleTag = async (req, res) => {
     try {
-        const listedStudentAttendance = await StudentAttendanceModel.findAll({
-            attributes: {
-            exclude: ["student_id", "attendance_id"],
-            },
-            include: [
-                {
-                model: StudentModel,
-                as: "student",
-                },
-                {
-                model: AttendanceModel,
-                as: "attendance",
-                },
-            ],         
-        });
-        res.json(listedStudentAttendance)
-        
+        const listedArticleTag = await ArticleTagModel.findAll()
+        res.json(listedArticleTag)
+
     } catch (err) {
-        res.status(500).json({message: "Error interno del lado del servidor", error: err.message})
+        res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
+
 };
 
-//GET/api/studentAttendances/id:
-//Obtiene un registro tabla StundentAttendance especificando el ID
-export const listStudentAttendanceById = async (req, res) => {
+//GET /api/articleTags/:id: obtener un tipo de artículo por ID
+export const listArticleTagById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const listedStudentAttendance = await StudentAttendanceModel.findByPk(id, {
-            attributes: {
-            exclude: ["student_id", "attendance_id"],
-            },
-            include: [
-                {
-                model: StudentModel,
-                as: "student",
-                },
-                {
-                model: AttendanceModel,
-                as: "attendance",
-                },
-            ],         
-        });
-        if (listedStudentAttendance) {
-            res.status(200).json(listedStudentAttendance);
+        const listedArticleTagID = await ArticleTagModel.findByPk(id);
+        if (listedArticleTagID) {
+            res.status(200).json(listedAttendancetID);
         } else {
-            res.status(404).json({ message: 'El registro de asistencia buscado no existe' });
+            res.status(404).json({ message: 'Tabla intermedia buscada no existe' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//DELETE/api/studentAttendances/id:
-//Borra un registro de la tabla studentAttendance especificando el ID
-export const deleteStudentAttendance = async (req, res) => {
+//DELETE /api/articleTags/:id: eliminar un tipo de artículo
+export const deleteArticleTag = async (req, res) => {
     const { id } = req.params;
     try {
-        const findStudentAttendance = await StudentAttendanceModel.findByPk(id);
-        if (findStudentAttendance) {
-            await findStudentAttendance.destroy()
-            res.json({ message: 'Registro de asistencia eliminado correctamente' })
+        const listedArticleTag = await ArticleTagModel.findByPk(id);
+        if (listedArticleTag) {
+            await listedArticleTag.destroy()
+            res.json({ message: 'Artículo eliminada correctamente' })
         } else {
-            res.status(404).json({ message: 'El registro de asistencia que se intenta eliminar no existe' })
+            res.status(404).json({ message: 'La tabla intermedia que se intenta eliminar no existe' })
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//PUT/api/studentAttendances/id:
-//Actualiza un registro de la tabla studentAttendance especificando el ID
-export const updateStudentAttendance = async (req, res) => {
+//PUT /api/articleTags/:id: actualizar un tipo de artículo existente 
+export const updateArticleTag = async (req, res) => {
     const { id } = req.params;
-    let {attendance_date, student_id, attendance_id} = req.body;
+    let {article_id, tag_id} = req.body;
     try {
-        const findStudentAttendance = await StudentAttendanceModel.findByPk(id);
+        const listedArticleTag = await ArticleTagModel.findByPk(id);
 
-        if (findStudentAttendance) {
-            await findStudentAttendance.update({attendance_date, student_id, attendance_id}, {where: {id}});
-            res.status(200).json(findStudentAttendance);
+        if (listedArticleTag) {
+            await listedArticleTag.update({title, content, excerpt, user_id}, {where: {id}});
+            res.status(200).json(listedArticleTag);
         } else {
-            res.status(404).json({ error: 'El registro de asistencia que se intenta actualizar no existe' });
+            res.status(404).json({ error: 'La tabla intermedia que se intenta actualizar no existe' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
-    } 
-}
+    }
+};
+

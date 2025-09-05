@@ -1,71 +1,71 @@
-import StudentModel from "../models/student.model.js";
+import TagModel from "../models/tag.model.js";
 
-//POST /api/students: crear un nuevo estudiante
-export const createStudent = async (req, res) => {
+//POST /api/tags: crear un nuevo estudiante
+export const createTag = async (req, res) => {
     try {
-        let {name, surname, gender} = req.body;
-        const studentCreated = await StudentModel.create(req.body);
+        let {name} = req.body;
+        const tagCreated = await TagModel.create(req.body);
         res.status(201).json({message: "Estudiante creado correctamente:"})
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//GET /api/students: listar todos los estudiantes
-export const listAllStudent = async (req, res) => {
+//GET /api/tags: listar todos las tags
+export const listAllTag = async (req, res) => {
     try {
-        const listedStudents = await StudentModel.findAll()
-        res.json(listedStudents)
+        const listedTags = await TagModel.findAll()
+        res.json(listedTags)
 
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//GET /api/students/:id: obtener un estudiante por ID
-export const listStudentById = async (req, res) => {
+//GET /api/tags/:id: obtener una tag por ID
+export const listTagById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const listedStudentID = await StudentModel.findByPk(id);
-        if (listedStudentID) {
-            res.status(200).json(listedStudentID);
+        const listedTagsID = await TagModel.findByPk(id);
+        if (listedTagsID) {
+            res.status(200).json(listedTagsID);
         } else {
-            res.status(404).json({ message: 'El estudiante buscado no existe' });
+            res.status(404).json({ message: 'La tag buscada no existe' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
 };
 
-//DELETE /api/students/:id: eliminar un estudiante
-export const deleteStudent = async (req, res) => {
+//DELETE /api/tags/:id: eliminar una tag
+export const deleteTag = async (req, res) => {
     const { id } = req.params;
     try {
-        const findStudent = await StudentModel.findByPk(id);
-        if (findStudent) {
-            await findStudent.destroy()
+        const findTag = await TagModel.findByPk(id);
+        if (findTag) {
+            await findTag.destroy()
             res.json({ message: 'Estudiante eliminado correctamente' })
         } else {
-            res.status(404).json({ message: 'El estudiante que se intenta eliminar no existe' })
+            res.status(404).json({ message: 'La tag que se intenta eliminar no existe' })
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
-}
+};
 
-//PUT /api/students/:id: actualizar un estudiante existente 
-export const updateStudent = async (req, res) => {
+//PUT /api/tags/:id: actualizar una tag existente 
+export const updateTag = async (req, res) => {
     const { id } = req.params;
-    let {name, surname, gender} = req.body;
+    let {name} = req.body;
     try {
-        const findStudent = await StudentModel.findByPk(id);
+        const findTag = await TagModel.findByPk(id);
 
-        if (findStudent) {
-            await findStudent.update({name, surname, gender}, {where: {id}});
-            res.status(200).json(findStudent);
+        if (findTag) {
+            await findTag.update({name}, {where: {id}});
+            res.status(200).json(findTag);
         } else {
-            res.status(404).json({ error: 'El estudiante que se intenta actualizar no existe' });
+            res.status(404).json({ error: 'La tag que se intenta actualizar no existe' });
         }
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })

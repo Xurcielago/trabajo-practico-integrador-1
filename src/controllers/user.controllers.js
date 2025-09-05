@@ -10,21 +10,21 @@ export const createUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
-}
+};
 
 //GET /api/users: listar todos los usuarios
 export const listAllUser = async (req, res) => {
     try {
         const listedUsers = await UserModel.findAll({
-            attributes: {
-            exclude: ["student_id"],
-            },
-            include: [
-            {
-                model: StudentModel,
-                as: "student",
-            },
-            ],
+            // attributes: {
+            // exclude: ["student_id"],
+            // },
+            // include: [
+            // {
+            //     model: StudentModel,
+            //     as: "student",
+            // },
+            // ],
         });
         res.json(listedUsers)
 
@@ -73,9 +73,9 @@ export const deleteUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }
-}
+};
 
-//PUT /api/users/:id: actualizar un usuario existente (con validaciones)
+//PUT /api/users/:id: actualizar un usuario existente
 export const updateUser = async (req, res) => {
     const { id } = req.params;
     let {name, email, password, student_id} = req.body;
