@@ -1,25 +1,31 @@
 import { body, param } from "express-validator";
 import UserModel from "../../models/user.model.js";
-import StudentModel from "../../models/student.model.js";
-import { Op } from "sequelize";
 
 export const createUserValidation = [
   
-  body("name")
+  body("username")
     .trim()
     .notEmpty()
-      .withMessage("Campo name es obligatorio")
+      .withMessage("Campo username es obligatorio")
     .isString()
-      .withMessage("Campo name debe ser una cadena de caracteres")
-    .isLength({ min: 2, max: 50 })
-      .withMessage("Campo name debe ser entre 2 y 50 caracteres"),
+      .withMessage("Campo username debe ser una cadena de caracteres")
+    .isLength({ min: 3, max: 20 })
+      .withMessage("Campo username debe ser entre 3 y 20 caracteres")
+    .custom(async (value) => {
+      const foundUser = await UserModel.findOne({
+        where: { username: value },
+      });
+      if (foundUser) {
+        throw new Error("Este nombre de usuario ya esta registrado");
+      }
+    }),
 
   body("email")
     .trim()
     .notEmpty()
       .withMessage("Campo email es obligatorio")
     .isEmail()
-      .withMessage("Campo email debe usar el formato apropiado user@email.com")
+      .withMessage("Campo email debe usar el formato apropiado nombre@email.com")
     .custom(async (value) => {
       const foundUser = await UserModel.findOne({
         where: { email: value },
@@ -32,22 +38,18 @@ export const createUserValidation = [
   body("password")
     .trim()
     .notEmpty()
-      .withMessage("Campo password es obligatorio")
-    .isLength({ min: 2, max: 50 })
-      .withMessage("Campo password debe ser entre 2 y 50 caracteres"),
-      
-  body("student_id")
+      .withMessage("El campo password es obligatorio")
+    .isLength({ min: 8 })
+      .withMessage("Campo password debe tener al menos 8 caracteres")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
+      .withMessage("Campo password debe contener al menos una mayúscula, una minúscula y un número"),
+  
+  body("role")
     .trim()
     .notEmpty()
-      .withMessage("Campo student_id es obligatorio")
-    .isInt({min: 1})
-      .withMessage("student_id debe ser un número entero positivo")
-    .custom(async (value) => {
-      const foundStudent = await StudentModel.findByPk(value);
-      if (!foundStudent) {
-        throw new Error("El estudiante no existe");
-      }
-    }),
+      .withMessage("El campo role es obligatorio")
+    .isIn(["admin", "user"])
+      .withMessage("El campo role solo puede ser 'admin' o 'user'"),
 ];
 
 export const updateUserValidation = [
@@ -61,24 +63,32 @@ export const updateUserValidation = [
       }
     }),
   
-  body("name")
+  body("username")
     .trim()
     .notEmpty()
-      .withMessage("Campo name es obligatorio")
+      .withMessage("Campo username es obligatorio")
     .isString()
-      .withMessage("Campo name debe ser una cadena de caracteres")
-    .isLength({ min: 2, max: 50 })
-      .withMessage("Campo name debe ser entre 2 y 50 caracteres"),
+      .withMessage("Campo username debe ser una cadena de caracteres")
+    .isLength({ min: 3, max: 20 })
+      .withMessage("Campo username debe ser entre 2 y 20 caracteres")
+    .custom(async (value) => {
+      const foundUser = await UserModel.findOne({
+        where: { username: value },
+      });
+      if (foundUser) {
+        throw new Error("Este nombre de usuario ya esta registrado");
+      }
+    }),
 
   body("email")
     .trim()
     .notEmpty()
       .withMessage("Campo email es obligatorio")
     .isEmail()
-      .withMessage("Campo email debe usar el formato apropiado user@email.com")
-    .custom(async (value,  { req }) => {
+      .withMessage("Campo email debe usar el formato apropiado nombre@email.com")
+    .custom(async (value) => {
       const foundUser = await UserModel.findOne({
-        where: { email: value, id: { [Op.ne]: req.params.id } },
+        where: { email: value },
       });
       if (foundUser) {
         throw new Error("Este email ya esta registrado");
@@ -86,11 +96,20 @@ export const updateUserValidation = [
     }),
       
   body("password")
-  .trim()
+    .trim()
     .notEmpty()
-      .withMessage("Campo password es obligatorio")
-    .isLength({ min: 2, max: 50 })
-      .withMessage("Campo password debe ser entre 2 y 50 caracteres"),
+      .withMessage("El campo password es obligatorio")
+    .isLength({ min: 8 })
+      .withMessage("Campo password debe tener al menos 8 caracteres")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
+      .withMessage("Campo password debe contener al menos una mayúscula, una minúscula y un número"),
+  
+  body("role")
+    .trim()
+    .notEmpty()
+      .withMessage("El campo role es obligatorio")
+    .isIn(["admin", "user"])
+      .withMessage("El campo role solo puede ser 'admin' o 'user'"),
 ]
 
 export const getUserByIDValidation = [
@@ -101,7 +120,7 @@ export const getUserByIDValidation = [
     .custom(async (value) => {
       const foundUser = await UserModel.findByPk(value);
       if (!foundUser) {
-        throw new Error("El usuario no existe");
+        throw new Error("El usuario que busca no existe");
       }
     }),
 ];
@@ -114,7 +133,7 @@ export const deleteUserValidation = [
     .custom(async (value) => {
       const foundUser = await UserModel.findByPk(value);
       if (!foundUser) {
-        throw new Error("El usuario no existe");
+        throw new Error("El usuario que se desea eliminar no existe");
       }
     }),
 ];
