@@ -1,5 +1,6 @@
 import { sequelize } from "../config/database.js";
 import { DataTypes } from "sequelize";
+import UserModel from "./user.model.js";
 
 const ArticleModel = sequelize.define("article", {
     title: {

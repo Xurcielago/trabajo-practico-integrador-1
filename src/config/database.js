@@ -20,6 +20,8 @@ export const start = async() => {
         console.log("-------------------")
         await sequelize.sync()
     } catch (error) {
-        console.log("Ocurrió un error durante la conexión con la base de datos")
+        console.log("-------------------")
+        console.log("Ocurrió un error durante la conexión con la base de datos", error)
+        console.log("-------------------")
     }
 }

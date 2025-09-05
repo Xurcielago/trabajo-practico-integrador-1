@@ -1,12 +1,12 @@
-import ArticleModel from "../models/attendance.model.js";
+import ArticleModel from "../models/article.model.js";
 
 //POST /api/articles: crear un tipo de asistencia
 export const createArticle = async (req, res) => {
     try {
         let {title, content, excerpt, user_id} = req.body;
 
-        const attendanceCreated = await ArticleModel.create(req.body)
-        res.status(201).json(attendanceCreated)
+        const articleCreated = await ArticleModel.create(req.body)
+        res.status(201).json(articleCreated)
     } catch (err) {
         res.status(500).json({ message: 'Error del lado interno del servidor: ', error: err.message })
     }

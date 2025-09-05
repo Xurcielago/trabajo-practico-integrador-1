@@ -37,7 +37,7 @@ ProfileModel.hasOne(UserModel, {
     foreignKey: "profile_id",
     as: "user"
 });
-
+/*
 ProfileModel.addHook("afterDestroy", async (profile) => {
   const user = await UserModel.findOne({
     where: { person_id: profile.dataValues.id },
@@ -45,5 +45,5 @@ ProfileModel.addHook("afterDestroy", async (profile) => {
 });
 
   await user.destroy();
-
+*/
 export default UserModel

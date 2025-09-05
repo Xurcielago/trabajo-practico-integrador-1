@@ -51,6 +51,12 @@ export const createUserValidation = [
       .withMessage("El campo role es obligatorio")
     .isIn(["admin", "user"])
       .withMessage("El campo role solo puede ser 'admin' o 'user'"),
+
+  body("profile_id")
+    .notEmpty()
+    .withMessage("El campo profile_id debe ser obligatorio")
+    .isInt({ min: 1 })
+    .withMessage("El campo profile_id debe ser un entero"),
 ];
 
 export const updateUserValidation = [

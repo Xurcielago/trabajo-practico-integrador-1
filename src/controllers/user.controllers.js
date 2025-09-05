@@ -1,4 +1,3 @@
-import StudentModel from "../models/student.model.js";
 import UserModel from "../models/user.model.js";
 
 //POST /api/users: crear un nuevo usuario

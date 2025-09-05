@@ -9,17 +9,17 @@ import {
 
 import { validator } from "../middlewares/validator.js";
 import { 
-    createTagProfileValidation,
-    getTagProfileByIDValidation,
-    deleteTagProfileValidation, 
-    updateTagProfileValidation 
+    createProfileValidation,
+    getProfileByIDValidation,
+    deleteProfileValidation, 
+    updateProfileValidation 
 } from "../middlewares/validations/profile.validations.js";
 
 const profileRoutes = Router();
-profileRoutes.post("/profiles", createTagProfileValidation, validator, createProfile)
+profileRoutes.post("/profiles", createProfileValidation, validator, createProfile)
 profileRoutes.get("/profiles", listAllProfile)
-profileRoutes.get("/profiles/:id", getTagProfileByIDValidation, validator, listProfileById)
-profileRoutes.put("/profiles/:id", deleteTagProfileValidation, validator, deleteProfile)
-profileRoutes.delete("/profiles/:id", updateTagProfileValidation, validator, updateProfile)
+profileRoutes.get("/profiles/:id", getProfileByIDValidation, validator, listProfileById)
+profileRoutes.put("/profiles/:id", deleteProfileValidation, validator, deleteProfile)
+profileRoutes.delete("/profiles/:id", updateProfileValidation, validator, updateProfile)
 
 export default profileRoutes

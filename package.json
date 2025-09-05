@@ -2,9 +2,11 @@
   "name": "trabajo-practico-integrador-1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node --watch app.js"
   },
   "repository": {
     "type": "git",
@@ -12,9 +14,7 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Xurcielago/trabajo-practico-integrador-1/issues"
-  },
+  
   "homepage": "https://github.com/Xurcielago/trabajo-practico-integrador-1#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",

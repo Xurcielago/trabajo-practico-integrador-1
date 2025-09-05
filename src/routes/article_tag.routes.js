@@ -5,21 +5,21 @@ import {
     listArticleTagById,
     deleteArticleTag,
     updateArticleTag
-} from "../controllers/articleTag.controllers.js";
+} from "../controllers/article_tag.controllers.js";
 
 import { validator } from "../middlewares/validator.js";
 import { 
-    createTagArticleValidation,
-    getTagArticleByIDValidation,
-    deleteTagArticleValidation, 
-    updateTagArticleValidation 
-} from "../middlewares/validations/articleTag.validations.js";
+    createArticleTagValidation,
+    getArticleTagByIDValidation,
+    deleteArticleTagValidation, 
+    updateArticleTagValidation 
+} from "../middlewares/validations/article_tag.validations.js";
 
 const articleTagRoutes = Router();
-articleTagRoutes.post("/articleTag", createTagArticleValidation, validator, createArticleTag)
+articleTagRoutes.post("/articleTag", createArticleTagValidation, validator, createArticleTag)
 articleTagRoutes.get("/articleTag", listAllArticleTag)
-articleTagRoutes.get("/articleTag/:id", getTagArticleByIDValidation, validator, listArticleTagById)
-articleTagRoutes.delete("/articleTag/:id", deleteTagArticleValidation, validator, deleteArticleTag)
-articleTagRoutes.put("/articleTag/:id", updateTagArticleValidation, validator, updateArticleTag)
+articleTagRoutes.get("/articleTag/:id", getArticleTagByIDValidation, validator, listArticleTagById)
+articleTagRoutes.delete("/articleTag/:id", deleteArticleTagValidation, validator, deleteArticleTag)
+articleTagRoutes.put("/articleTag/:id", updateArticleTagValidation, validator, updateArticleTag)
 
 export default articleTagRoutes
